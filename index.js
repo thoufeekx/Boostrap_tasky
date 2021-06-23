@@ -9,6 +9,9 @@
     //without using array 
      const taskContainer = document.querySelector(".task__container");
 
+     //to store card
+     const globalStore =[];
+
 
     const generateNewCard = (taskData) =>  `
     <div class="col-md-6 col-lg-4" id=${taskData.id}>
@@ -37,11 +40,41 @@
     </div>
 `;
 
+
+                //Step to saving data to localstorage
+          const loadInitialCardData = () => {
+            //local storage to get tasky card data
+             const getCardData = localStorage.getItem("tasky");
+
+            //convert string to normal object
+            const {cards} = JSON.parse(getCardData);
+
+
+            //loopover those arary to task object to create html card, inject to DOM
+
+             cards.map((cardObject) => {
+
+              //inject to DOM
+              taskContainer.insertAdjacentHTML("beforeend", generateNewCard(cardObject));
+              
+
+               //update our globalstore
+              globalStore.push(cardObject);
+
+             })
+
+           
+
+
+
+          }
+
+
      const saveChanges = () => {
 
       // The taskData object gets the "USER INPUT" and save it in Task Data
 
-    const taskData = {
+      const taskData = {
          
         //retune unique number for id
         id: `${Date.now()}`,
@@ -58,7 +91,33 @@
      // four option  to insert new item beforebegin, afterbegin, beforeend, afterend 
       taskContainer.insertAdjacentHTML("beforeend", generateNewCard(taskData));
 
-      
+      //delete
+      //edit
+      //open the card
+
+       // doing this will add new cards in array or else it will delete previous data
+      globalStore.push(taskData);
+
+      //localStorage.setItem(globalStore);  => wrong 
+
+
+      //JSON.stringfy need an object "globalstorage" is obj here
+      //why cards? json.strinfy expects an obj, global store is an array to card was created
+      localStorage.setItem("tasky", JSON.stringify({cards:globalStore}));
  
     };  
+
+
+
+
+    const deleteCard = (event) => {
+
+      //id
+      event = window.event;
+
+      const targetID = event
+
+      //match the id of the element with the id inside global store
+
+    }
 
