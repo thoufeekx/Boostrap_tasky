@@ -10,11 +10,11 @@
      const taskContainer = document.querySelector(".task__container");
 
      //to store card
-     const globalStore =[];
+     let globalStore =[];
 
 
     const generateNewCard = (taskData) =>  `
-    <div class="col-md-6 col-lg-4" id=${taskData.id}>
+    <div class="col-md-6 col-lg-4" >
     <div class="card ">
         <div class="card-header d-flex justify-content-end gap-2">
             <button type="button" class="btn btn-outline-success">
@@ -22,8 +22,8 @@
             </i>
             </button>
          
-           <button type="button" class="btn btn-outline-danger">
-            <i class="far fa-trash-alt"></i>
+           <button type="button" class="btn btn-outline-danger" id=${taskData.id} onclick="deleteCard.apply(this, arguments)">
+            <i class="far fa-trash-alt" id=${taskData.id} onclick="taskContainer.apply(this, arguments)"></i>
            </button>
         </div>
         <img src=${taskData.imageUrl} 
@@ -109,15 +109,50 @@
 
 
 
-
+    // event is an event calling option
     const deleteCard = (event) => {
 
       //id
+      //attach the window.event to event parameter
       event = window.event;
+         
 
-      const targetID = event
+
+      //event.target.id give id of button clicked
+      const targetID = event.target.id;
+
+
+      const tagname = event.target.tagName;  //BUTTON
+
+
 
       //match the id of the element with the id inside global store
+      //"cardoject" = each card in globalstore array
 
-    }
+
+       //const newUpdatedArray = globalStore.filter((cardObject) => cardObject.id != targetID); 1
+
+       //updating globalstore with new array
+
+       //globalStore = newUpdatedArray;    2
+ 
+       // 1 and 2 in one step , we have deleted newly updated array in above step
+       globalStore = globalStore.filter((cardObject) => cardObject.id != targetID);
+       
+       
+
+        //updating array after deletion
+        localStorage.setItem("tasky", JSON.stringify({cards:globalStore}));
+
+       //contact parent
+       //taskContainer.removeChild()
+
+       if(tagname === "BUTTON"){
+         return taskContainer.removeChild(event.target.parentNode.parentNode.parentNode);
+       }
+       else{
+         return taskContainer.removeChild(event.target.parentNode.parentNode.parentNode.parentNode);
+       }
+
+    };
 
