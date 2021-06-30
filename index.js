@@ -15,10 +15,10 @@
 
     const generateNewCard = (taskData) =>  `
     <div class="col-md-6 col-lg-4" >
-    <div class="card ">
+    <div class="card" >
         <div class="card-header d-flex justify-content-end gap-2">
-            <button type="button" class="btn btn-outline-success">
-            <i class="fas fa-pencil-alt">
+            <button type="button" class="btn btn-outline-success" onclick="editCard.apply(this, arguments)">
+            <i class="fas fa-pencil-alt" id=${taskData.id} onclick="editCard.apply(this, arguments)">
             </i>
             </button>
          
@@ -28,13 +28,13 @@
         </div>
         <img src=${taskData.imageUrl} 
         class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">${taskData.taskTitle}</h5>
-          <p class="card-text">${taskData.taskDescription}</p>
-          <a href="#" class="btn btn-primary ">${taskData.taskType}</a>
+        <div class="card-body" >
+          <h5 class="card-title" id="task__title" >${taskData.taskTitle}</h5>
+          <p class="card-text" id="task__description">${taskData.taskDescription}</p>
+          <a href="#" class="btn btn-primary" id="task__type">${taskData.taskType}</a>
         </div>
         <div class="card-footer ">
-          <button type="button" class="btn btn-primary float-end">Open task</button>
+          <button type="button" class="btn btn-primary float-end" >Open Task</button>
         </div>
       </div>
     </div>
@@ -44,10 +44,10 @@
                 //Step to saving data to localstorage
           const loadInitialCardData = () => {
             //local storage to get tasky card data
-             const getCardData = localStorage.getItem("tasky");
+          const getCardData = localStorage.getItem("tasky");
 
             //convert string to normal object
-            const {cards} = JSON.parse(getCardData);
+          const {cards} = JSON.parse(getCardData);
 
 
             //loopover those arary to task object to create html card, inject to DOM
@@ -74,7 +74,7 @@
 
       // The taskData object gets the "USER INPUT" and save it in Task Data
 
-      const taskData = {
+     const taskData = {
          
         //retune unique number for id
         id: `${Date.now()}`,
@@ -156,3 +156,96 @@
 
     };
 
+
+    /*const editTaskCard = (event) => {
+
+       //attach the window.event to event parameter
+       event= window.event;
+
+
+       //event.target.id give id of button clicked
+      const targetID = event.target.id;
+
+
+      const tagname = event.target.tagName;  //BUTTON
+
+    }
+    */
+
+
+
+   
+
+
+/*
+
+const saveData = () => {
+
+  const edit__title = getElementById("task__title").textContent;
+  const edit__type = getElementById("task__title").textContent;
+  const edit__description = getElementById("task__title").textContent;
+
+  document.getElementById("task__title").innerHTML = edit__title;
+  document.getElementById("task__type").innerHTML = edit__type;
+  document.getElementById("task__description").innerHTML = edit__description;
+
+
+  document.getElementById("task__title").contentEditable = "false";
+  document.getElementById("task__type").contentEditable = "false";
+  document.getElementById("task__description").contentEditable = "false";
+}
+
+*/
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+
+const editCard = (event) => {
+  //console.log("hey edit is called");
+
+
+  //attach the window.event to event parameter
+  event = window.event;
+
+  //event.target.id give id of button clicked
+  const targetID = event.target.id;
+
+  const tagname = event.target.tagName;  //BUTTON
+
+  if( tagname === "BUTTON"){
+
+    //now we need the parent element
+    //if button is clicked
+    parentElement = event.target.parentNode.parentNode;
+  } 
+  else{
+    //if pencil icon is clicked
+    parentElement = event.target.parentNode.parentNode.parentNode;
+    
+  }
+  //taskTitle is linked with respective html content , here card title 
+  let taskTitle       = parentElement.childNodes[5].childNodes[1];
+  let taskDescription = parentElement.childNodes[5].childNodes[3];
+  let taskType        = parentElement.childNodes[5].childNodes[5];
+  let submitButton    = parentElement.childNodes[7].childNodes[1];
+  //console.log(submitButton);
+   
+  //console.log(taskType); to check the output in html console
+
+
+
+  //setAttribute() is function that dynamically changes property of html elements
+  taskTitle.setAttribute("contenteditable","true");
+  taskType.setAttribute("contenteditable","true");
+  taskDescription.setAttribute("contenteditable","true");
+  
+
+
+  //Dynamically changing name of "open task" to  "save changes"
+  submitButton.innerHTML = "save changes";
+
+  
+  
+
+
+}
