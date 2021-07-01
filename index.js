@@ -34,7 +34,7 @@
           <a href="#" class="btn btn-primary" id="task__type">${taskData.taskType}</a>
         </div>
         <div class="card-footer ">
-          <button type="button" class="btn btn-primary float-end" >Open Task</button>
+          <button type="button" id=${taskData.id} class="btn btn-primary float-end" >Open Task</button>
         </div>
       </div>
     </div>
@@ -238,14 +238,87 @@ const editCard = (event) => {
   taskTitle.setAttribute("contenteditable","true");
   taskType.setAttribute("contenteditable","true");
   taskDescription.setAttribute("contenteditable","true");
+  submitButton.setAttribute("onclick", "saveEditChanges.apply(this, arguments)");
   
 
 
   //Dynamically changing name of "open task" to  "save changes"
   submitButton.innerHTML = "save changes";
 
+    
+
   
+};
+
+
+const saveEditChanges = (event) => {
+  event = window.event;
+
+  //event.target.id give id of button clicked
+  const targetID = event.target.id;
+
+  const tagname = event.target.tagName;  //BUTTON
+
+  if( tagname === "BUTTON"){
+
+    //now we need the parent element
+    //if button is clicked
+    parentElement = event.target.parentNode.parentNode;
+  } 
+  else{
+    //if pencil icon is clicked
+    parentElement = event.target.parentNode.parentNode.parentNode;
+    
+  }
+  //taskTitle is linked with respective html content , here card title 
+  let taskTitle       = parentElement.childNodes[5].childNodes[1];
+  let taskDescription = parentElement.childNodes[5].childNodes[3];
+  let taskType        = parentElement.childNodes[5].childNodes[5];
+  let submitButton    = parentElement.childNodes[7].childNodes[1];
+
+
+
+  const updatedData = {
+
+    taskTitle: taskTitle.innerHTML,
+    taskType: taskType.innerHTML,
+    taskDescription:taskDescription.innerHTML,
+  };
+
+  //console.log({updatedData});
+
+
+    globalStore = globalStore.map((task) => {
+      if(task.id === targetID) {
+        return {
+          id: task.id,
+          // ".value" ==> return only value user had input
+          imageUrl:       task.imageurl,
+          taskTitle:       updatedData.taskTitle,
+          taskType:        updatedData.taskType,
+          taskDescription: updatedData.taskDescription,
+
+        }
+      }
+
+      return task; //important else reamianing data awill be lost
+    });
+    //console.log(globalStore);
+   //update array with new info
+   localStoarage =localStorage.setItem("tasky", JSON.stringify({cards:globalStore}));
+
+
+   taskTitle.setAttribute("contenteditable","false");
+  taskType.setAttribute("contenteditable","false");
+  taskDescription.setAttribute("contenteditable","false");
+ 
   
 
 
-}
+  //Dynamically changing name of "open task" to  "save changes"
+  submitButton.innerHTML = "Open Task";
+  submitButton.removeAttribute("onclick")
+
+  
+
+};
